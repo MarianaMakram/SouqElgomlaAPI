@@ -24,6 +24,7 @@ namespace Models
             builder.Property(i => i.AdminID).IsRequired(false);
             builder.Property(i => i.CategoryID).IsRequired(false);
             builder.Property(i => i.SupplierID).IsRequired(false);
+            builder.Property(i => i.Description).HasMaxLength(1000);
         }
     }
 }

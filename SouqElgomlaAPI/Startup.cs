@@ -10,6 +10,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Data;
+using Microsoft.EntityFrameworkCore;
+using Repositories;
 
 namespace SouqElgomlaAPI
 {
@@ -27,6 +30,14 @@ namespace SouqElgomlaAPI
         {
 
             services.AddControllers();
+            services.AddDbContext<SouqElgomlaContext>(options =>
+            {
+                options.UseSqlServer(Configuration.GetConnectionString("SouqElGomla"));
+            });
+
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "SouqElgomlaAPI", Version = "v1" });
@@ -45,7 +56,7 @@ namespace SouqElgomlaAPI
 
             app.UseRouting();
 
-            app.UseAuthorization();
+            //app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

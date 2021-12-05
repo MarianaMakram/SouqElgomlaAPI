@@ -9,11 +9,13 @@ namespace Models
     public class Product : BaseModel
     {
         public string Name { get; set; }
+        public string? Description { get; set; }
         public double Price { get; set; }
-        public DateTime ExpireDate { get; set; }
-        public string UnitWeight { get; set; }
+        public int Quantity { get; set; }
+        public DateTime? ExpireDate { get; set; }
+        public string? UnitWeight { get; set; }
         public string Image { get; set; }
-        public DateTime ProductionDate{ get; set; }
+        public DateTime? ProductionDate{ get; set; }
 
         public int? AdminID { get; set; }
 
