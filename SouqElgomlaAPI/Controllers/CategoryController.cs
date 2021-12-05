@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Repositories;
 using Models;
+using ViewModels;
 
 namespace SouqElgomlaAPI.Controllers
 {
@@ -15,6 +16,7 @@ namespace SouqElgomlaAPI.Controllers
     {
         IUnitOfWork unitOfWork;
         IGenericRepository<Category> CategoryRepo;
+        ResultViewModel result = new ResultViewModel();
 
         public CategoryController(IUnitOfWork _unitOfWork)
         {
@@ -23,10 +25,26 @@ namespace SouqElgomlaAPI.Controllers
         }
 
         [HttpGet("")]
-        public async Task<List<Category>> Get()
+        public async Task<ResultViewModel> Get()
         {
             var list = await CategoryRepo.GetAsync();
-            return list.ToList();
+            if(list == null)
+            {
+                result.Message = "There is no categeries";
+            }
+            else
+            {
+                List<CategoryModel> models = new List<CategoryModel>();
+                foreach(var item in list)
+                {
+                    models.Add(item.ToCategoryModel());
+                }
+
+                result.Data = models;
+            }
+            return result;
+            
         }
+
     }
 }

@@ -11,6 +11,7 @@ namespace Repositories
     {
         IGenericRepository<Category> GetCategoryRepository();
         IGenericRepository<Product> GetProductRepository();
+        IGenericRepository<RetailerReviewProduct> GetProductReview();
         Task Save();
     }
 }
