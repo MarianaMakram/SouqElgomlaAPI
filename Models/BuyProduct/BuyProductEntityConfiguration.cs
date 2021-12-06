@@ -15,7 +15,7 @@ namespace Models
             builder.ToTable("BuyProduct");
             builder.HasKey(i => i.ID);
             builder.Property(i => i.ID).ValueGeneratedOnAdd();
-            builder.Property(i => i.RetailerID).IsRequired();
+            builder.Property(i => i.UserId).IsRequired();
             builder.Property(i => i.ProductID).IsRequired();
             builder.Property(i => i.Time).HasColumnType("date");
         }

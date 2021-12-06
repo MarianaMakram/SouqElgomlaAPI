@@ -3,25 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Data.Migrations
 {
-    public partial class Init : Migration
+    public partial class init : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
-                name: "Admin",
-                columns: table => new
-                {
-                    ID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    UserName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Admin", x => x.ID);
-                });
-
             migrationBuilder.CreateTable(
                 name: "Category",
                 columns: table => new
@@ -29,7 +14,8 @@ namespace Data.Migrations
                     ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false)
+                    Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
+                    ImgUrl = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -66,54 +52,32 @@ namespace Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Retailer",
+                name: "User",
                 columns: table => new
                 {
-                    ID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    FirstName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    LastName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Address = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
-                    City = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
-                    Phone = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
-                    Image = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: true),
-                    UserName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    AdminID = table.Column<int>(type: "int", nullable: true)
+                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Image = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
+                    PayPalAccount = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UserName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    NormalizedUserName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    NormalizedEmail = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
+                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SecurityStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhoneNumberConfirmed = table.Column<bool>(type: "bit", nullable: false),
+                    TwoFactorEnabled = table.Column<bool>(type: "bit", nullable: false),
+                    LockoutEnd = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    LockoutEnabled = table.Column<bool>(type: "bit", nullable: false),
+                    AccessFailedCount = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Retailer", x => x.ID);
-                    table.ForeignKey(
-                        name: "FK_Retailer_Admin_AdminID",
-                        column: x => x.AdminID,
-                        principalTable: "Admin",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Supplier",
-                columns: table => new
-                {
-                    ID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    CompanyName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    UserName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Password = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Phone = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
-                    AdminID = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Supplier", x => x.ID);
-                    table.ForeignKey(
-                        name: "FK_Supplier_Admin_AdminID",
-                        column: x => x.AdminID,
-                        principalTable: "Admin",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Restrict);
+                    table.PrimaryKey("PK_User", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -150,24 +114,20 @@ namespace Data.Migrations
                     ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(1000)", maxLength: 1000, nullable: true),
                     Price = table.Column<double>(type: "float", nullable: false),
-                    ExpireDate = table.Column<DateTime>(type: "date", nullable: false),
+                    Quantity = table.Column<int>(type: "int", nullable: false),
+                    ExpireDate = table.Column<DateTime>(type: "date", nullable: true),
                     UnitWeight = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
                     Image = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    ProductionDate = table.Column<DateTime>(type: "date", nullable: false),
-                    AdminID = table.Column<int>(type: "int", nullable: true),
+                    ProductionDate = table.Column<DateTime>(type: "date", nullable: true),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     CategoryID = table.Column<int>(type: "int", nullable: true),
-                    SupplierID = table.Column<int>(type: "int", nullable: true)
+                    IsApproved = table.Column<bool>(type: "bit", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Product", x => x.ID);
-                    table.ForeignKey(
-                        name: "FK_Product_Admin_AdminID",
-                        column: x => x.AdminID,
-                        principalTable: "Admin",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Product_Category_CategoryID",
                         column: x => x.CategoryID,
@@ -175,39 +135,11 @@ namespace Data.Migrations
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Product_Supplier_SupplierID",
-                        column: x => x.SupplierID,
-                        principalTable: "Supplier",
-                        principalColumn: "ID",
+                        name: "FK_Product_User_UserId",
+                        column: x => x.UserId,
+                        principalTable: "User",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "SupplierRetailerReview",
-                columns: table => new
-                {
-                    ID = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    RetailerID = table.Column<int>(type: "int", nullable: false),
-                    SupplierID = table.Column<int>(type: "int", nullable: false),
-                    Time = table.Column<DateTime>(type: "date", nullable: true),
-                    Rate = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_SupplierRetailerReview", x => x.ID);
-                    table.ForeignKey(
-                        name: "FK_SupplierRetailerReview_Retailer_RetailerID",
-                        column: x => x.RetailerID,
-                        principalTable: "Retailer",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_SupplierRetailerReview_Supplier_SupplierID",
-                        column: x => x.SupplierID,
-                        principalTable: "Supplier",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -216,9 +148,8 @@ namespace Data.Migrations
                 {
                     ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    RetailerID = table.Column<int>(type: "int", nullable: false),
-                    OrderID = table.Column<int>(type: "int", nullable: false),
-                    Time = table.Column<DateTime>(type: "date", nullable: false)
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    OrderID = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -230,10 +161,10 @@ namespace Data.Migrations
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_MakeOrder_Retailer_RetailerID",
-                        column: x => x.RetailerID,
-                        principalTable: "Retailer",
-                        principalColumn: "ID",
+                        name: "FK_MakeOrder_User_UserId",
+                        column: x => x.UserId,
+                        principalTable: "User",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -244,7 +175,7 @@ namespace Data.Migrations
                     ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ProductID = table.Column<int>(type: "int", nullable: false),
-                    RetailerID = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Time = table.Column<DateTime>(type: "date", nullable: true),
                     Quantity = table.Column<int>(type: "int", nullable: true)
                 },
@@ -258,10 +189,10 @@ namespace Data.Migrations
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_BuyProduct_Retailer_RetailerID",
-                        column: x => x.RetailerID,
-                        principalTable: "Retailer",
-                        principalColumn: "ID",
+                        name: "FK_BuyProduct_User_UserId",
+                        column: x => x.UserId,
+                        principalTable: "User",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -272,7 +203,7 @@ namespace Data.Migrations
                     ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     ProductID = table.Column<int>(type: "int", nullable: false),
-                    RetailerID = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
                     Time = table.Column<DateTime>(type: "date", nullable: true),
                     Rate = table.Column<int>(type: "int", nullable: true)
                 },
@@ -286,11 +217,11 @@ namespace Data.Migrations
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_RetailerReviewProduct_Retailer_RetailerID",
-                        column: x => x.RetailerID,
-                        principalTable: "Retailer",
-                        principalColumn: "ID",
-                        onDelete: ReferentialAction.Cascade);
+                        name: "FK_RetailerReviewProduct_User_UserId",
+                        column: x => x.UserId,
+                        principalTable: "User",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
@@ -299,9 +230,9 @@ namespace Data.Migrations
                 column: "ProductID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_BuyProduct_RetailerID",
+                name: "IX_BuyProduct_UserId",
                 table: "BuyProduct",
-                column: "RetailerID");
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_MakeOrder_OrderID",
@@ -309,9 +240,9 @@ namespace Data.Migrations
                 column: "OrderID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_MakeOrder_RetailerID",
+                name: "IX_MakeOrder_UserId",
                 table: "MakeOrder",
-                column: "RetailerID");
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Order_PaymentID",
@@ -324,24 +255,14 @@ namespace Data.Migrations
                 column: "ShipperID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Product_AdminID",
-                table: "Product",
-                column: "AdminID");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Product_CategoryID",
                 table: "Product",
                 column: "CategoryID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Product_SupplierID",
+                name: "IX_Product_UserId",
                 table: "Product",
-                column: "SupplierID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Retailer_AdminID",
-                table: "Retailer",
-                column: "AdminID");
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_RetailerReviewProduct_ProductID",
@@ -349,24 +270,9 @@ namespace Data.Migrations
                 column: "ProductID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_RetailerReviewProduct_RetailerID",
+                name: "IX_RetailerReviewProduct_UserId",
                 table: "RetailerReviewProduct",
-                column: "RetailerID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Supplier_AdminID",
-                table: "Supplier",
-                column: "AdminID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_SupplierRetailerReview_RetailerID",
-                table: "SupplierRetailerReview",
-                column: "RetailerID");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_SupplierRetailerReview_SupplierID",
-                table: "SupplierRetailerReview",
-                column: "SupplierID");
+                column: "UserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -381,16 +287,10 @@ namespace Data.Migrations
                 name: "RetailerReviewProduct");
 
             migrationBuilder.DropTable(
-                name: "SupplierRetailerReview");
-
-            migrationBuilder.DropTable(
                 name: "Order");
 
             migrationBuilder.DropTable(
                 name: "Product");
-
-            migrationBuilder.DropTable(
-                name: "Retailer");
 
             migrationBuilder.DropTable(
                 name: "Payment");
@@ -402,10 +302,7 @@ namespace Data.Migrations
                 name: "Category");
 
             migrationBuilder.DropTable(
-                name: "Supplier");
-
-            migrationBuilder.DropTable(
-                name: "Admin");
+                name: "User");
         }
     }
 }

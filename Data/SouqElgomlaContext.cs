@@ -12,35 +12,31 @@ namespace Data
     {
         public SouqElgomlaContext(DbContextOptions<SouqElgomlaContext> options) : base(options) { }
 
-        public DbSet<Admin> Admins;
+        public DbSet<User> Users;
         public DbSet<Product> Products;
         public DbSet<Category> Categories;
-        public DbSet<Supplier> Suppliers;
-        public DbSet<Retailer> Retailers;
         public DbSet<Shipper> Shippers;
         public DbSet<Order> Orders;
         public DbSet<Payment> Payments ;
         public DbSet<BuyProduct> BuyProducts ;
         public DbSet<MakeOrder> MakeOrders ;
         public DbSet<RetailerReviewProduct> RetailerReviewProducts ;
-        public DbSet<SupplierRetailerReview> SupplierRetailerReviews ;
+        //public DbSet<SupplierRetailerReview> SupplierRetailerReviews ;
 
 
         /**to link betwwen class of entity model and its confguration and Dbcontext*/
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyConfiguration(new AdminEntityConfiguration());
             modelBuilder.ApplyConfiguration(new BuyProductEntityConfiguration());
             modelBuilder.ApplyConfiguration(new CategoryEntityConfiguration());
             modelBuilder.ApplyConfiguration(new MakeOrderEntityConfiguration());
             modelBuilder.ApplyConfiguration(new OrderEntityConfiguration());
             modelBuilder.ApplyConfiguration(new PaymentEntityConfiguration());
             modelBuilder.ApplyConfiguration(new ProductEntityConfiguration());
-            modelBuilder.ApplyConfiguration(new RetailerEntityConfiguration());
             modelBuilder.ApplyConfiguration(new RetailerReviewProductCategoryEntityConfiguration());
             modelBuilder.ApplyConfiguration(new ShipperEntityConfiguration());
-            modelBuilder.ApplyConfiguration(new SupplierEntityConfiguration());
-            modelBuilder.ApplyConfiguration(new SupplierRetailerReviewEntityConfiguration());
+            //modelBuilder.ApplyConfiguration(new SupplierRetailerReviewEntityConfiguration());
+            modelBuilder.ApplyConfiguration(new UserEntityConfiguration());
             base.OnModelCreating(modelBuilder);
         }
         }

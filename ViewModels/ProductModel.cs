@@ -16,6 +16,7 @@ namespace ViewModels
         public string? UnitWeight { get; set; }
         public string Image { get; set; }
         public int? Rate { get; set; }
+        public int Quantity { get; set; }
 
     }
 
@@ -31,7 +32,8 @@ namespace ViewModels
                 Price = product.Price,
                 Description = product.Description,
                 UnitWeight = product.UnitWeight,
-                Rate = rate
+                Rate = rate,
+                Quantity = product.Quantity
             };
         }
     }

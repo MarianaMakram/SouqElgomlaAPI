@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Migrations
 {
     [DbContext(typeof(SouqElgomlaContext))]
-    [Migration("20211203023143_Init")]
-    partial class Init
+    [Migration("20211206000942_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -20,33 +20,6 @@ namespace Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.11")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-            modelBuilder.Entity("Models.Admin", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("UserName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.HasKey("ID");
-
-                    b.ToTable("Admin");
-                });
 
             modelBuilder.Entity("Models.BuyProduct", b =>
                 {
@@ -61,17 +34,18 @@ namespace Data.Migrations
                     b.Property<int?>("Quantity")
                         .HasColumnType("int");
 
-                    b.Property<int>("RetailerID")
-                        .HasColumnType("int");
-
                     b.Property<DateTime?>("Time")
                         .HasColumnType("date");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("ID");
 
                     b.HasIndex("ProductID");
 
-                    b.HasIndex("RetailerID");
+                    b.HasIndex("UserId");
 
                     b.ToTable("BuyProduct");
                 });
@@ -87,6 +61,11 @@ namespace Data.Migrations
                         .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
+
+                    b.Property<string>("ImgUrl")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -108,17 +87,15 @@ namespace Data.Migrations
                     b.Property<int>("OrderID")
                         .HasColumnType("int");
 
-                    b.Property<int>("RetailerID")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("Time")
-                        .HasColumnType("date");
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("ID");
 
                     b.HasIndex("OrderID");
 
-                    b.HasIndex("RetailerID");
+                    b.HasIndex("UserId");
 
                     b.ToTable("MakeOrder");
                 });
@@ -175,19 +152,23 @@ namespace Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("AdminID")
-                        .HasColumnType("int");
-
                     b.Property<int?>("CategoryID")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("ExpireDate")
+                    b.Property<string>("Description")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<DateTime?>("ExpireDate")
                         .HasColumnType("date");
 
                     b.Property<string>("Image")
                         .IsRequired()
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
+
+                    b.Property<bool?>("IsApproved")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -197,78 +178,26 @@ namespace Data.Migrations
                     b.Property<double>("Price")
                         .HasColumnType("float");
 
-                    b.Property<DateTime>("ProductionDate")
+                    b.Property<DateTime?>("ProductionDate")
                         .HasColumnType("date");
 
-                    b.Property<int?>("SupplierID")
+                    b.Property<int>("Quantity")
                         .HasColumnType("int");
 
                     b.Property<string>("UnitWeight")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.HasKey("ID");
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.HasIndex("AdminID");
+                    b.HasKey("ID");
 
                     b.HasIndex("CategoryID");
 
-                    b.HasIndex("SupplierID");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Product");
-                });
-
-            modelBuilder.Entity("Models.Retailer", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Address")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<int?>("AdminID")
-                        .HasColumnType("int");
-
-                    b.Property<string>("City")
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("Image")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("Phone")
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<string>("UserName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("AdminID");
-
-                    b.ToTable("Retailer");
                 });
 
             modelBuilder.Entity("Models.RetailerReviewProduct", b =>
@@ -284,17 +213,17 @@ namespace Data.Migrations
                     b.Property<int?>("Rate")
                         .HasColumnType("int");
 
-                    b.Property<int>("RetailerID")
-                        .HasColumnType("int");
-
                     b.Property<DateTime?>("Time")
                         .HasColumnType("date");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("ID");
 
                     b.HasIndex("ProductID");
 
-                    b.HasIndex("RetailerID");
+                    b.HasIndex("UserId");
 
                     b.ToTable("RetailerReviewProduct");
                 });
@@ -326,74 +255,71 @@ namespace Data.Migrations
                     b.ToTable("Shipper");
                 });
 
-            modelBuilder.Entity("Models.Supplier", b =>
+            modelBuilder.Entity("Models.User", b =>
                 {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
 
-                    b.Property<int?>("AdminID")
+                    b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
-                    b.Property<string>("CompanyName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                    b.Property<string>("Address")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("bit");
 
-                    b.Property<string>("Phone")
+                    b.Property<string>("Image")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("datetimeoffset");
+
+                    b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PayPalAccount")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("bit");
 
                     b.Property<string>("UserName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("ID");
+                    b.HasKey("Id");
 
-                    b.HasIndex("AdminID");
-
-                    b.ToTable("Supplier");
-                });
-
-            modelBuilder.Entity("Models.SupplierRetailerReview", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("Rate")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RetailerID")
-                        .HasColumnType("int");
-
-                    b.Property<int>("SupplierID")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("Time")
-                        .HasColumnType("date");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("RetailerID");
-
-                    b.HasIndex("SupplierID");
-
-                    b.ToTable("SupplierRetailerReview");
+                    b.ToTable("User");
                 });
 
             modelBuilder.Entity("Models.BuyProduct", b =>
@@ -404,15 +330,15 @@ namespace Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Models.Retailer", "Retailer")
+                    b.HasOne("Models.User", "User")
                         .WithMany("BuyProducts")
-                        .HasForeignKey("RetailerID")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Product");
 
-                    b.Navigation("Retailer");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Models.MakeOrder", b =>
@@ -423,15 +349,15 @@ namespace Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Models.Retailer", "Retailer")
+                    b.HasOne("Models.User", "User")
                         .WithMany("MakeOrders")
-                        .HasForeignKey("RetailerID")
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Order");
 
-                    b.Navigation("Retailer");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Models.Order", b =>
@@ -451,32 +377,17 @@ namespace Data.Migrations
 
             modelBuilder.Entity("Models.Product", b =>
                 {
-                    b.HasOne("Models.Admin", "Admin")
-                        .WithMany("Products")
-                        .HasForeignKey("AdminID");
-
                     b.HasOne("Models.Category", "Category")
                         .WithMany("Products")
                         .HasForeignKey("CategoryID");
 
-                    b.HasOne("Models.Supplier", "Supplier")
+                    b.HasOne("Models.User", "User")
                         .WithMany("Products")
-                        .HasForeignKey("SupplierID");
-
-                    b.Navigation("Admin");
+                        .HasForeignKey("UserId");
 
                     b.Navigation("Category");
 
-                    b.Navigation("Supplier");
-                });
-
-            modelBuilder.Entity("Models.Retailer", b =>
-                {
-                    b.HasOne("Models.Admin", "Admin")
-                        .WithMany("Retailers")
-                        .HasForeignKey("AdminID");
-
-                    b.Navigation("Admin");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Models.RetailerReviewProduct", b =>
@@ -487,52 +398,13 @@ namespace Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Models.Retailer", "Retailer")
+                    b.HasOne("Models.User", "User")
                         .WithMany("RetailerReviewProducts")
-                        .HasForeignKey("RetailerID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("UserId");
 
                     b.Navigation("Product");
 
-                    b.Navigation("Retailer");
-                });
-
-            modelBuilder.Entity("Models.Supplier", b =>
-                {
-                    b.HasOne("Models.Admin", "Admin")
-                        .WithMany("Suppliers")
-                        .HasForeignKey("AdminID");
-
-                    b.Navigation("Admin");
-                });
-
-            modelBuilder.Entity("Models.SupplierRetailerReview", b =>
-                {
-                    b.HasOne("Models.Retailer", "Retailer")
-                        .WithMany("SupplierRetailerReviews")
-                        .HasForeignKey("RetailerID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Models.Supplier", "Supplier")
-                        .WithMany("SupplierRetailerReviews")
-                        .HasForeignKey("SupplierID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Retailer");
-
-                    b.Navigation("Supplier");
-                });
-
-            modelBuilder.Entity("Models.Admin", b =>
-                {
-                    b.Navigation("Products");
-
-                    b.Navigation("Retailers");
-
-                    b.Navigation("Suppliers");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Models.Category", b =>
@@ -552,27 +424,20 @@ namespace Data.Migrations
                     b.Navigation("RetailerReviewProducts");
                 });
 
-            modelBuilder.Entity("Models.Retailer", b =>
-                {
-                    b.Navigation("BuyProducts");
-
-                    b.Navigation("MakeOrders");
-
-                    b.Navigation("RetailerReviewProducts");
-
-                    b.Navigation("SupplierRetailerReviews");
-                });
-
             modelBuilder.Entity("Models.Shipper", b =>
                 {
                     b.Navigation("Orders");
                 });
 
-            modelBuilder.Entity("Models.Supplier", b =>
+            modelBuilder.Entity("Models.User", b =>
                 {
+                    b.Navigation("BuyProducts");
+
+                    b.Navigation("MakeOrders");
+
                     b.Navigation("Products");
 
-                    b.Navigation("SupplierRetailerReviews");
+                    b.Navigation("RetailerReviewProducts");
                 });
 #pragma warning restore 612, 618
         }

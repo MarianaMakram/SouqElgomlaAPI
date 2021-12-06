@@ -21,9 +21,8 @@ namespace Models
             builder.Property(i => i.ProductionDate).HasColumnType("date");
             builder.Property(i => i.ExpireDate).HasColumnType("date");
             builder.Property(i => i.UnitWeight).HasMaxLength(50);
-            builder.Property(i => i.AdminID).IsRequired(false);
+            builder.Property(i => i.UserId).IsRequired(false);
             builder.Property(i => i.CategoryID).IsRequired(false);
-            builder.Property(i => i.SupplierID).IsRequired(false);
             builder.Property(i => i.Description).HasMaxLength(1000);
         }
     }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,18 +18,17 @@ namespace Models
         public string Image { get; set; }
         public DateTime? ProductionDate{ get; set; }
 
-        public int? AdminID { get; set; }
+        [ForeignKey("User")]
+        public string? UserId { get; set; }
 
+        [ForeignKey("Category")]
         public int? CategoryID { get; set; }
+        public bool? IsApproved { get; set; }
 
-        public int? SupplierID { get; set; }
-
-        public virtual Admin Admin { get; set; }
+        public virtual User User { get; set; }
         public virtual ICollection<BuyProduct> BuyProducts { get; set; }
 
         public virtual Category Category { get; set; }
-
-        public virtual Supplier Supplier { get; set; }
         public virtual ICollection<RetailerReviewProduct> RetailerReviewProducts { get; set; }
 
     }
