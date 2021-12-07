@@ -13,6 +13,11 @@ using System.Threading.Tasks;
 using Data;
 using Microsoft.EntityFrameworkCore;
 using Repositories;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace SouqElgomlaAPI
 {
@@ -38,6 +43,43 @@ namespace SouqElgomlaAPI
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
+            /**Identity Configuration of User*/
+
+            services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<SouqElgomlaContext>()
+                .AddDefaultTokenProviders();
+
+            /**Configuration for UserRepository
+             * One instance per Request with AddScopped
+             */
+
+            services.AddScoped<IUserRepository, UserRepository>();
+
+            #region check Token validation
+            /**configuration to check if the token is valid or not when user send it in Bearer Authorizatio
+             * in check validation of Token we used the same way of creating signinkey in UserRepository
+             * (the way used to Encryption used again to Decyription)
+             */
+
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
+            {
+                options.RequireHttpsMetadata = false;
+                options.SaveToken = false;
+                options.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidIssuer = Configuration["JWT:ValidIssuer"],
+                    ValidAudience = Configuration["JWT:ValidAudience"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWT:Secret"]))
+                };
+            });
+            #endregion
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "SouqElgomlaAPI", Version = "v1" });
@@ -56,7 +98,12 @@ namespace SouqElgomlaAPI
 
             app.UseRouting();
 
-            //app.UseAuthorization();
+            /**
+             * After apply identity configuration add UseAuthentication and UseAuthorization
+             * after UseRouting and before controolers mapping to check if the user is regestred or not
+             */
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

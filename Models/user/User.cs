@@ -11,9 +11,9 @@ namespace Models
     {
         
         public string Name { get; set; }
-        public string Address { get; set; }
-        public string Image { get; set; }
-        public string PayPalAccount { get; set; }
+        public string? Address { get; set; }
+        public string? Image { get; set; }
+        public string? PayPalAccount { get; set; }
 
         public virtual ICollection<Product> Products { get; set; }
         public virtual ICollection<RetailerReviewProduct> RetailerReviewProducts { get; set; }

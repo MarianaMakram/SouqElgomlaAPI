@@ -28,7 +28,6 @@ namespace SouqElgomlaAPI.Controllers
         }
 
         [HttpGet]
-
         public async Task<ResultViewModel> Get()
         {
             var list = await ProductRepo.GetAsync();
@@ -54,7 +53,6 @@ namespace SouqElgomlaAPI.Controllers
         }
 
         [HttpGet("{id:int}")]
-
         public async Task<ResultViewModel> Get(int? id)
         {
             if (id == null || id <= 0)
@@ -79,6 +77,15 @@ namespace SouqElgomlaAPI.Controllers
                 }
             }
 
+            return result;
+        }
+
+        [HttpPost]
+        public async Task<ResultViewModel> Post(Product product)
+        {
+            await ProductRepo.Add(product);
+            await unitOfWork.Save();
+            result.Data = await ProductRepo.GetAsync();
             return result;
         }
     }

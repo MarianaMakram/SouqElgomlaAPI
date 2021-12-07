@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Models;
 using System;
 using System.Collections.Generic;
@@ -8,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace Data
 {
-    public class SouqElgomlaContext : DbContext
+    public class SouqElgomlaContext : IdentityDbContext<User>
     {
         public SouqElgomlaContext(DbContextOptions<SouqElgomlaContext> options) : base(options) { }
 
-        public DbSet<User> Users;
+        //public DbSet<User> Users;
         public DbSet<Product> Products;
         public DbSet<Category> Categories;
         public DbSet<Shipper> Shippers;
