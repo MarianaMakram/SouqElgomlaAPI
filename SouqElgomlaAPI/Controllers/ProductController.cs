@@ -7,11 +7,13 @@ using System.Threading.Tasks;
 using Repositories;
 using Models;
 using ViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SouqElgomlaAPI.Controllers
 {
     [Route("[controller]")]
     [ApiController]
+    
     public class ProductController : ControllerBase
     {
         IUnitOfWork unitOfWork;
@@ -42,8 +44,16 @@ namespace SouqElgomlaAPI.Controllers
                 foreach(var item in list.ToList())
                 {
                     var RateList = (await ProductReviewRepo.GetAsync()).ToList().FindAll(i => i.ProductID == item.ID);
-                    var ProductRate = RateList.Sum(i => i.Rate) / RateList.Count;
-
+                    var ProductRate = RateList.Sum(i => i.Rate);
+                    var count = RateList.Count;
+                    if (count == 0)
+                    {
+                        ProductRate = 0;
+                    }
+                    else
+                    {
+                        ProductRate = ProductRate / count;
+                    }
                     productModels.Add(item.ToProductModel(ProductRate));
                 }
                 result.Data = productModels;
@@ -81,6 +91,7 @@ namespace SouqElgomlaAPI.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Supplier")]
         public async Task<ResultViewModel> Post(Product product)
         {
             await ProductRepo.Add(product);

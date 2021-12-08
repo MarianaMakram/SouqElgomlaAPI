@@ -48,6 +48,7 @@ namespace SouqElgomlaAPI
             services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<SouqElgomlaContext>()
                 .AddDefaultTokenProviders();
 
+
             /**Configuration for UserRepository
              * One instance per Request with AddScopped
              */

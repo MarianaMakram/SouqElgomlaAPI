@@ -14,20 +14,30 @@ namespace SouqElgomlaAPI.Controllers
     public class UserController : ControllerBase
     {
         IUserRepository userRepository;
-
+        ResultViewModel result = new ResultViewModel();
         public UserController(IUserRepository _userRepository)
         {
             userRepository = _userRepository;
         }
 
-        [HttpPost]
+        [HttpPost("signup")]
         public async Task<IActionResult> SignUp(SignUpModel signUpModel)
         {
-            string Token = await userRepository.SignUp(signUpModel);
-            if (string.IsNullOrEmpty(Token))
-                return Unauthorized();
+            result = await userRepository.SignUp(signUpModel);
+            if (result.Status)
+                return Ok(result);
 
-            return Ok(Token);
+            return Unauthorized(result);
+        }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login(LoginModel model)
+        {
+            result = await userRepository.LogIn(model);
+            if (result.Status)
+                return Ok(result);
+
+            return Unauthorized();
         }
     }
 }
