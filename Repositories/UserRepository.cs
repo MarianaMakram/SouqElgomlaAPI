@@ -36,7 +36,7 @@ namespace Repositories
 
         public async Task<ResultViewModel> SignUp(SignUpModel signUpModel)
         {
-            var userExists = await UserManager.FindByNameAsync(signUpModel.UserName);
+            var userExists = await UserManager.FindByEmailAsync(signUpModel.Email);
             if (userExists != null)
             {
                 return new ResultViewModel
@@ -53,9 +53,11 @@ namespace Repositories
             var Result = await UserManager.CreateAsync(Temp, signUpModel.Password);
             if (!Result.Succeeded)
             {
-                return new ResultViewModel { 
-                    Status = false, 
-                    Message = "User creation failed! Please check user details and try again."
+                return new ResultViewModel {
+                    Status = false,
+                    Message = "User creation failed! Please check user details and try again.",
+                    
+
                 };
             }
 
@@ -72,20 +74,18 @@ namespace Repositories
 
             #endregion
 
-            var Token = GenerateJwtToken(Temp);
-
             return new ResultViewModel
             {
                 Status = true,
-                Message = Token.Result,
-                Data = await UserManager.FindByNameAsync(Temp.UserName)
+                Message = "User creation successed"
             };
 
         }
 
         public async Task<ResultViewModel> LogIn(LoginModel loginModel)
         {
-            var user = await UserManager.FindByNameAsync(loginModel.Username);
+            var user = await UserManager.FindByEmailAsync(loginModel.Email);
+            
             if (user != null && await UserManager.CheckPasswordAsync(user, loginModel.Password))
             {
                 var Token = GenerateJwtToken(user);
@@ -93,14 +93,14 @@ namespace Repositories
                 return new ResultViewModel
                 {
                     Status = true,
-                    Message = Token.Result,
-                    Data = user
+                    Token = Token.Result
                 };
             }
 
             return new ResultViewModel
             {
-                Status = false
+                Status = false,
+                Message = "Invalid Email or password"
             };
         }
 
@@ -115,7 +115,7 @@ namespace Repositories
             /**Encoding Secret in appsettings.json to Secret key
              * SymmetricSecurityKey included in cyriptography
              */
-            var SignupKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWT:Secret"]));
+            var Key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWT:Secret"]));
 
             /**Information about user be included in his token*/
 
@@ -126,6 +126,7 @@ namespace Repositories
             {
                 new Claim(ClaimTypes.Name,user.Name),
                 new Claim(ClaimTypes.Email,user.Email),
+                new Claim(ClaimTypes.Role,roles[0]),
                 new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString())
             };
 
@@ -140,7 +141,7 @@ namespace Repositories
                     /**When this token will be expired*/
                     expires: DateTime.Now.AddDays(15),
 
-                    signingCredentials: new SigningCredentials(SignupKey, SecurityAlgorithms.HmacSha256Signature),
+                    signingCredentials: new SigningCredentials(Key, SecurityAlgorithms.HmacSha256Signature),
                     claims: userClaims
                 );
             #endregion

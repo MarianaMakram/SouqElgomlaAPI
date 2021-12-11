@@ -103,6 +103,7 @@ namespace SouqElgomlaAPI
              * After apply identity configuration add UseAuthentication and UseAuthorization
              * after UseRouting and before controolers mapping to check if the user is regestred or not
              */
+
             app.UseAuthentication();
             app.UseAuthorization();
 
