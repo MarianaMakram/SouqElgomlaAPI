@@ -53,12 +53,19 @@ namespace Repositories
             var Result = await UserManager.CreateAsync(Temp, signUpModel.Password);
             if (!Result.Succeeded)
             {
-                return new ResultViewModel {
+                List<string> errors = new List<string>();
+                foreach (var item in Result.Errors)
+                {
+                    errors.Add(item.Description);
+                }
+                
+                return new ResultViewModel
+                {
                     Status = false,
                     Message = "User creation failed! Please check user details and try again.",
-                    
-
+                    Error = errors
                 };
+                
             }
 
             #region AddRole
