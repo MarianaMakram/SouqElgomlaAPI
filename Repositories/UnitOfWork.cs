@@ -15,16 +15,19 @@ namespace Repositories
         IGenericRepository<Category> CategoryRepo;
         IGenericRepository<Product> ProductRepo;
         IGenericRepository<RetailerReviewProduct> ProductReviewRepo;
+        IUserRepository userRepository;
 
         public UnitOfWork(SouqElgomlaContext context ,
                            IGenericRepository<Category> _CategoryRepo,
                            IGenericRepository<Product> _ProductRepo,
-                           IGenericRepository<RetailerReviewProduct> _ProductReviewRepo)
+                           IGenericRepository<RetailerReviewProduct> _ProductReviewRepo,
+                           IUserRepository _userRepository)
         {
             Context = context;
             CategoryRepo = _CategoryRepo;
             ProductRepo = _ProductRepo;
             ProductReviewRepo = _ProductReviewRepo;
+            userRepository = _userRepository;
         }
 
         public IGenericRepository<Category> GetCategoryRepository()
@@ -40,6 +43,10 @@ namespace Repositories
         public IGenericRepository<RetailerReviewProduct> GetProductReview()
         {
             return ProductReviewRepo;
+        }
+        public IUserRepository GetUserRepository()
+        {
+            return userRepository;
         }
 
         public async Task Save()

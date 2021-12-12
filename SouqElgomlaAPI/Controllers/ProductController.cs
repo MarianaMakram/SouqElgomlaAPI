@@ -8,6 +8,7 @@ using Repositories;
 using Models;
 using ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.JsonPatch;
 
 namespace SouqElgomlaAPI.Controllers
 {
@@ -99,5 +100,15 @@ namespace SouqElgomlaAPI.Controllers
             result.Data = await ProductRepo.GetAsync();
             return result;
         }
+
+        [HttpPatch("{id:int}")]
+        [Authorize(Roles = "Supplier")]
+        public async Task<Product> UpdatePatch(int id,JsonPatchDocument document)
+        {
+            await ProductRepo.UpdatePatch(id, document);
+            await unitOfWork.Save();
+            return await ProductRepo.GetByIDAsync(id);
+        }
+
     }
 }

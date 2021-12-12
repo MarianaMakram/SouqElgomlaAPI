@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.JsonPatch;
 
 namespace Repositories
 {
@@ -156,6 +157,30 @@ namespace Repositories
             /**to return Token as string*/
         
             return new JwtSecurityTokenHandler().WriteToken(Token);
+        }
+
+        public async Task<ResultViewModel> GetUser(string email)
+        {
+            User user = await UserManager.FindByEmailAsync(email);
+            if(user != null)
+            {
+                return new ResultViewModel
+                {
+                    Status = true,
+                    Data = user
+                };
+            }
+            return new ResultViewModel
+            {
+                Status = false
+            };
+        }
+
+        public async Task<User> EditPatch(string email , JsonPatchDocument document)
+        {
+           User user = await UserManager.FindByEmailAsync(email);
+            document.ApplyTo(user);
+            return user;
         }
 
     }
