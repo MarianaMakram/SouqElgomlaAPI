@@ -66,7 +66,7 @@ namespace SouqElgomlaAPI.Controllers
 
                 if (Response.Status)
                 {
-                    return Ok(Response);
+                    return Ok(Response.Data);
                 }
             }
             return Unauthorized();
