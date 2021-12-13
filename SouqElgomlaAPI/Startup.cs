@@ -81,9 +81,6 @@ namespace SouqElgomlaAPI
             });
             #endregion
 
-            /*Allow cors cross-origin requests*/
-
-            services.AddCors(options => options.AddDefaultPolicy(bulider => bulider.WithOrigins("http://localhost:4200")));
 
             services.AddSwaggerGen(c =>
             {
@@ -103,11 +100,17 @@ namespace SouqElgomlaAPI
 
             app.UseRouting();
 
+            /*Allow cors cross-origin requests*/
+            app.UseCors(options =>
+                           options.AllowAnyOrigin()
+                                  .AllowAnyMethod()
+                                  .AllowAnyHeader());
+
             /**
              * After apply identity configuration add UseAuthentication and UseAuthorization
              * after UseRouting and before controolers mapping to check if the user is regestred or not
              */
-            app.UseCors();
+
             app.UseAuthentication();
             app.UseAuthorization();
             
