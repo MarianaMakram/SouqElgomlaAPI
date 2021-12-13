@@ -9,6 +9,7 @@ using Models;
 using ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
+using System.Security.Claims;
 
 namespace SouqElgomlaAPI.Controllers
 {
@@ -20,6 +21,7 @@ namespace SouqElgomlaAPI.Controllers
         IUnitOfWork unitOfWork;
         IGenericRepository<Product> ProductRepo;
         IGenericRepository<RetailerReviewProduct> ProductReviewRepo;
+        IUserRepository userRepository;
 
         ResultViewModel result = new ResultViewModel();
 
@@ -28,19 +30,25 @@ namespace SouqElgomlaAPI.Controllers
             unitOfWork = _unitOfWork;
             ProductRepo = unitOfWork.GetProductRepository();
             ProductReviewRepo = unitOfWork.GetProductReview();
+            userRepository = unitOfWork.GetUserRepository();
         }
 
+        #region Get All products
         [HttpGet]
         public async Task<ResultViewModel> Get()
         {
             var list = await ProductRepo.GetAsync();
+            /*if there is no products*/
             if (list == null)
             {
-                result.Message = "There is no categeries";
+                result.Status = false;
+                result.Message = "There is no Products";
             }
             else
             {
+                result.Status = true;
                 List<ProductModel> productModels = new List<ProductModel>();
+                list = list.Where(item => item.Quantity > 0);
 
                 foreach(var item in list.ToList())
                 {
@@ -63,6 +71,9 @@ namespace SouqElgomlaAPI.Controllers
             return result;
         }
 
+        #endregion
+
+        #region Get product by id
         [HttpGet("{id:int}")]
         public async Task<ResultViewModel> Get(int? id)
         {
@@ -91,16 +102,49 @@ namespace SouqElgomlaAPI.Controllers
             return result;
         }
 
+        #endregion
+
+        #region Get products by category ID
+        [HttpGet("GetProdByCatID")]
+        public async Task<ResultViewModel> GetProdByCatID(int categoryID)
+        {
+            var response = await Get();
+            if (response.Status)
+            {
+                var data = (List<ProductModel>)response.Data;
+                data.FindAll(item => item.CategoryId == categoryID);
+                response.Data = data;
+            }
+            return response;
+        }
+        #endregion
+
+        #region Add product
         [HttpPost]
         [Authorize(Roles = "Supplier")]
         public async Task<ResultViewModel> Post(Product product)
         {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            if (identity != null)
+            {
+                IEnumerable<Claim> claims = identity.Claims;
+                var email = claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Email).ToString();
+                var user = await userRepository.GetUser(email);
+                if (user !=null)
+                {
+                    product.UserId = user.Id;   
+                }
+            }
+
             await ProductRepo.Add(product);
             await unitOfWork.Save();
             result.Data = await ProductRepo.GetAsync();
             return result;
         }
 
+        #endregion
+
+        #region patch product
         [HttpPatch("{id:int}")]
         [Authorize(Roles = "Supplier")]
         public async Task<Product> UpdatePatch(int id,JsonPatchDocument document)
@@ -110,5 +154,52 @@ namespace SouqElgomlaAPI.Controllers
             return await ProductRepo.GetByIDAsync(id);
         }
 
+        #endregion
+
+        #region Get products for specific user supplier
+
+        [HttpGet("GetProductsForUser")]
+        [Authorize(Roles = "Supplier")]
+        public async Task<IActionResult> GetProductsForUser()
+        {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            if (identity != null)
+            {
+                IEnumerable<Claim> claims = identity.Claims;
+                var email = claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Email).ToString();
+                var user = await userRepository.GetUser(email);
+                if (user != null)
+                {
+                    var list = await ProductRepo.GetAsync();
+                    var data = list.ToList().FindAll(item => item.UserId == user.Id);
+
+                    result.Status = true;
+                    result.Data = data;
+                    
+                }
+                result.Status = false;
+                result.Message = "there is no products";
+
+                return Ok(result);
+            }
+            return Unauthorized();
+        }
+        #endregion
+
+        #region Edit product Quantity
+        /*
+         * edit product quantity by decrement it according to number of selled items
+         */
+
+        [HttpPut("{id:int}")]
+        public async Task<IActionResult> Put(int id, int quantity)
+        {
+            var product = await ProductRepo.GetByIDAsync(id);
+            product.Quantity -= quantity;
+            await ProductRepo.Update(product);
+            await unitOfWork.Save();
+            return Ok();
+        }
+        #endregion
     }
 }

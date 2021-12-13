@@ -20,6 +20,7 @@ namespace SouqElgomlaAPI.Controllers
         IUnitOfWork unitOfWork;
         IUserRepository userRepository;
         ResultViewModel result = new ResultViewModel();
+        UserResultViewModel UserResult = new UserResultViewModel();
         public UserController(IUnitOfWork _unitOfWork)
         {
             unitOfWork = _unitOfWork;
@@ -32,10 +33,12 @@ namespace SouqElgomlaAPI.Controllers
             var email = claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Email);
             return email.Value;
         }
+
+
         [HttpPost("signup")]
         public async Task<IActionResult> SignUp(SignUpModel signUpModel)
         {
-            result = await userRepository.SignUp(signUpModel);
+            UserResult = await userRepository.SignUp(signUpModel);
             if (result.Status)
                 return Ok(result);
 
@@ -45,7 +48,7 @@ namespace SouqElgomlaAPI.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginModel model)
         {
-            result = await userRepository.LogIn(model);
+            UserResult = await userRepository.LogIn(model);
             //if (result.Status)
                 return Ok(result);
 
@@ -62,11 +65,11 @@ namespace SouqElgomlaAPI.Controllers
             if (identity != null)
             {
                 var email = GetEmailFromClaim(identity);
-                var Response = await userRepository.GetUser(email);
+                var user = await userRepository.GetUser(email);
 
-                if (Response.Status)
+                if (user != null)
                 {
-                    return Ok(Response.Data);
+                    return Ok(user);
                 }
             }
             return Unauthorized();

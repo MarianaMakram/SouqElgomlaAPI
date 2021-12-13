@@ -11,9 +11,9 @@ namespace Repositories
 {
     public interface IUserRepository
     {
-        Task<ResultViewModel> SignUp(SignUpModel signUpModel);
-        Task<ResultViewModel> LogIn(LoginModel loginModel);
-        Task<ResultViewModel> GetUser(string email);
+        Task<UserResultViewModel> SignUp(SignUpModel signUpModel);
+        Task<UserResultViewModel> LogIn(LoginModel loginModel);
+        Task<User> GetUser(string email);
         Task<User> EditPatch(string email, JsonPatchDocument document);
     }
 }

@@ -35,12 +35,12 @@ namespace Repositories
             RoleManager = roleManager;
         }
 
-        public async Task<ResultViewModel> SignUp(SignUpModel signUpModel)
+        public async Task<UserResultViewModel> SignUp(SignUpModel signUpModel)
         {
             var userExists = await UserManager.FindByEmailAsync(signUpModel.Email);
             if (userExists != null)
             {
-                return new ResultViewModel
+                return new UserResultViewModel
                 {
                     Status = false,
                     Message = "User already exists!"
@@ -60,7 +60,7 @@ namespace Repositories
                     errors.Add(item.Description);
                 }
                 
-                return new ResultViewModel
+                return new UserResultViewModel
                 {
                     Status = false,
                     Message = "User creation failed! Please check user details and try again.",
@@ -82,7 +82,7 @@ namespace Repositories
 
             #endregion
 
-            return new ResultViewModel
+            return new UserResultViewModel
             {
                 Status = true,
                 Message = "User creation successed"
@@ -90,7 +90,7 @@ namespace Repositories
 
         }
 
-        public async Task<ResultViewModel> LogIn(LoginModel loginModel)
+        public async Task<UserResultViewModel> LogIn(LoginModel loginModel)
         {
             var user = await UserManager.FindByEmailAsync(loginModel.Email);
             
@@ -98,14 +98,14 @@ namespace Repositories
             {
                 var Token = GenerateJwtToken(user);
 
-                return new ResultViewModel
+                return new UserResultViewModel
                 {
                     Status = true,
                     Token = Token.Result
                 };
             }
 
-            return new ResultViewModel
+            return new UserResultViewModel
             {
                 Status = false,
                 Message = "Invalid Email or password"
@@ -159,21 +159,22 @@ namespace Repositories
             return new JwtSecurityTokenHandler().WriteToken(Token);
         }
 
-        public async Task<ResultViewModel> GetUser(string email)
+        public async Task<User> GetUser(string email)
         {
-            User user = await UserManager.FindByEmailAsync(email);
-            if(user != null)
-            {
-                return new ResultViewModel
-                {
-                    Status = true,
-                    Data = user
-                };
-            }
-            return new ResultViewModel
-            {
-                Status = false
-            };
+            var user = await UserManager.FindByEmailAsync(email);
+            //if(user != null)
+            //{
+            //    return new ResultViewModel
+            //    {
+            //        Status = true,
+            //        Data = user
+            //    };
+            //}
+            //return new ResultViewModel
+            //{
+            //    Status = false
+            //};
+            return user;
         }
 
         public async Task<User> EditPatch(string email , JsonPatchDocument document)
