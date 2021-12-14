@@ -46,5 +46,16 @@ namespace SouqElgomlaAPI.Controllers
             
         }
 
+        [HttpGet("{id:int}")]
+        public async Task<ResultViewModel> Get(int id)
+        {
+            var category = await CategoryRepo.GetByIDAsync(id);
+            return new ResultViewModel
+            {
+                Status = true,
+                Data = category
+            };
+        }
+
     }
 }

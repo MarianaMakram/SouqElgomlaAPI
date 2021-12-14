@@ -105,14 +105,14 @@ namespace SouqElgomlaAPI.Controllers
         #endregion
 
         #region Get products by category ID
-        [HttpGet("GetProdByCatID")]
+        [HttpGet("GetProdByCatID/{categoryID:int}")]
         public async Task<ResultViewModel> GetProdByCatID(int categoryID)
         {
             var response = await Get();
             if (response.Status)
             {
                 var data = (List<ProductModel>)response.Data;
-                data.FindAll(item => item.CategoryId == categoryID);
+                data = data.FindAll(item => item.CategoryId == categoryID);
                 response.Data = data;
             }
             return response;

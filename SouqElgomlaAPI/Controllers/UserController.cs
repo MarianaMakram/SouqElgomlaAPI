@@ -50,7 +50,7 @@ namespace SouqElgomlaAPI.Controllers
         {
             UserResult = await userRepository.LogIn(model);
             //if (result.Status)
-                return Ok(result);
+                return Ok(UserResult);
 
            // return Unauthorized();
         }
