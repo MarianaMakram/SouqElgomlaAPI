@@ -107,7 +107,7 @@ namespace SouqElgomlaAPI.Controllers
                                         .FindAll(i => i.ProductID == id);
                     var ProductRate = ProductRateList.Sum(i => i.Rate)/ ProductRateList.Count;
 
-                    Temp.Image = schema + "://" + url.Host.Host + ":" + url.Host.Port + "/Files/" +Temp.Image;
+                    //Temp.Image = schema + "://" + url.Host.Host + ":" + url.Host.Port + "/Files/" +Temp.Image;
                     result.Data = Temp.ToProductModel(ProductRate);
                 }
             }

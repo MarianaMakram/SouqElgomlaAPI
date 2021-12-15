@@ -18,12 +18,14 @@ namespace SouqElgomlaAPI.Controllers
     {
         IUnitOfWork unitOfWork;
         IGenericRepository<Category> CategoryRepo;
+        IGenericRepository<Product> productRepo;
         ResultViewModel result = new ResultViewModel();
 
         public CategoryController(IUnitOfWork _unitOfWork)
         {
             unitOfWork = _unitOfWork;
             CategoryRepo = unitOfWork.GetCategoryRepository();
+            productRepo = unitOfWork.GetProductRepository();
         }
 
         [HttpGet("")]
@@ -32,17 +34,13 @@ namespace SouqElgomlaAPI.Controllers
             var list = await CategoryRepo.GetAsync();
             if(list == null)
             {
+                result.Status = false;
                 result.Message = "There is no categeries";
             }
             else
             {
-                List<CategoryModel> models = new List<CategoryModel>();
-                foreach (var item in list)
-                {
-                    models.Add(item.ToCategoryModel());
-                }
-
-                result.Data = models;
+                result.Status = true;
+                result.Data = list;
             }
             return result;
             
