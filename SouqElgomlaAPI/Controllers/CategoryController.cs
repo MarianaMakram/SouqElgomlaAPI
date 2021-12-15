@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using Repositories;
 using Models;
 using ViewModels;
+using System.Net.Http;
+using System.Net.Http.Headers;
 
 namespace SouqElgomlaAPI.Controllers
 {
@@ -35,7 +37,7 @@ namespace SouqElgomlaAPI.Controllers
             else
             {
                 List<CategoryModel> models = new List<CategoryModel>();
-                foreach(var item in list)
+                foreach (var item in list)
                 {
                     models.Add(item.ToCategoryModel());
                 }

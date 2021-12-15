@@ -48,7 +48,7 @@ namespace SouqElgomlaAPI.Controllers
             {
                 result.Status = true;
                 List<ProductModel> productModels = new List<ProductModel>();
-                list = list.Where(item => item.Quantity > 0);
+                list = list.Where(item => item.Quantity > 0 && item.IsApproved==true);
 
                 foreach(var item in list.ToList())
                 {
@@ -128,17 +128,19 @@ namespace SouqElgomlaAPI.Controllers
             if (identity != null)
             {
                 IEnumerable<Claim> claims = identity.Claims;
-                var email = claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Email).ToString();
-                var user = await userRepository.GetUser(email);
+                var email = claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Email);
+                var user = await userRepository.GetUser(email.Value);
                 if (user !=null)
                 {
-                    product.UserId = user.Id;   
+                    product.UserId = user.Id;
+                    product.IsApproved = false;
+                    await ProductRepo.Add(product);
+                    await unitOfWork.Save();
+                    result.Status = true;
+                    return result;
                 }
             }
-
-            await ProductRepo.Add(product);
-            await unitOfWork.Save();
-            result.Data = await ProductRepo.GetAsync();
+            result.Status = false;
             return result;
         }
 
@@ -149,9 +151,20 @@ namespace SouqElgomlaAPI.Controllers
         [Authorize(Roles = "Supplier")]
         public async Task<Product> UpdatePatch(int id,JsonPatchDocument document)
         {
-            await ProductRepo.UpdatePatch(id, document);
-            await unitOfWork.Save();
-            return await ProductRepo.GetByIDAsync(id);
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            if (identity != null)
+            {
+                IEnumerable<Claim> claims = identity.Claims;
+                var email = claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Email);
+                var user = await userRepository.GetUser(email.Value);
+                if (user != null)
+                {
+                    await ProductRepo.UpdatePatch(id, document);
+                    await unitOfWork.Save();
+                    return await ProductRepo.GetByIDAsync(id);
+                }
+            }
+            return null;
         }
 
         #endregion
@@ -166,8 +179,8 @@ namespace SouqElgomlaAPI.Controllers
             if (identity != null)
             {
                 IEnumerable<Claim> claims = identity.Claims;
-                var email = claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Email).ToString();
-                var user = await userRepository.GetUser(email);
+                var email = claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Email);
+                var user = await userRepository.GetUser(email.Value);
                 if (user != null)
                 {
                     var list = await ProductRepo.GetAsync();
