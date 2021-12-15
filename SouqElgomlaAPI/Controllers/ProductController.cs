@@ -10,6 +10,7 @@ using ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using System.Security.Claims;
+using System.IO;
 
 namespace SouqElgomlaAPI.Controllers
 {
@@ -77,6 +78,17 @@ namespace SouqElgomlaAPI.Controllers
         [HttpGet("{id:int}")]
         public async Task<ResultViewModel> Get(int? id)
         {
+            var url = HttpContext.Request;
+            
+            string schema;
+            if (url.IsHttps)
+            {
+               schema = "https";
+            }
+            else
+            {
+                schema = "http";
+            }
             if (id == null || id <= 0)
             {
                 result.Message = " Invalid Id";
@@ -93,8 +105,9 @@ namespace SouqElgomlaAPI.Controllers
                 {
                     var ProductRateList = (await ProductReviewRepo.GetAsync()).ToList()
                                         .FindAll(i => i.ProductID == id);
-                    var ProductRate = ProductRateList.Sum(i => i.Rate)/ ProductRateList.Count();
-                    
+                    var ProductRate = ProductRateList.Sum(i => i.Rate)/ ProductRateList.Count;
+
+                    Temp.Image = schema + "://" + url.Host.Host + ":" + url.Host.Port + "/Files/" +Temp.Image;
                     result.Data = Temp.ToProductModel(ProductRate);
                 }
             }
@@ -122,8 +135,11 @@ namespace SouqElgomlaAPI.Controllers
         #region Add product
         [HttpPost]
         [Authorize(Roles = "Supplier")]
-        public async Task<ResultViewModel> Post(Product product)
+        public async Task<ResultViewModel> Post()
         {
+            Product product = new Product();
+            var httpRequest = HttpContext.Request;
+
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             if (identity != null)
             {
@@ -132,6 +148,25 @@ namespace SouqElgomlaAPI.Controllers
                 var user = await userRepository.GetUser(email.Value);
                 if (user !=null)
                 {
+                    /*get product data from FormData*/
+
+                    product.Name = httpRequest.Form.Files["prodName"].ToString();
+                    product.Price = Convert.ToDouble(httpRequest.Form.Files["prodPrice"].ToString());
+                    product.Quantity = Convert.ToInt32(httpRequest.Form.Files["prodPrice"].ToString());
+                    product.Description = httpRequest.Form.Files["prodDescription"].ToString();
+                    product.UnitWeight = httpRequest.Form.Files["prodUnitWeight"].ToString();
+                    product.ExpireDate = Convert.ToDateTime(httpRequest.Form.Files["prodExpireDate"].ToString());
+                    product.ProductionDate = Convert.ToDateTime(httpRequest.Form.Files["prodProductionDate"].ToString());
+                    product.CategoryID = Convert.ToInt32(httpRequest.Form.Files["prodCategoryID"].ToString());
+
+                    var ProdImage = httpRequest.Form.Files["ProdImage"];
+                    string imageName = null;
+                    if (ProdImage != null)
+                    {
+                        imageName = new String(Path.GetFileNameWithoutExtension(ProdImage.FileName).Take(10).ToArray()).Replace(" ", "-");
+                        imageName = imageName + DateTime.Now.ToString("yymmssfff") + Path.GetExtension(ProdImage.FileName);
+                    }
+                    product.Image = imageName;
                     product.UserId = user.Id;
                     product.IsApproved = false;
                     await ProductRepo.Add(product);
