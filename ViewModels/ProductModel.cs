@@ -17,6 +17,8 @@ namespace ViewModels
         public string Image { get; set; }
         public int? Rate { get; set; }
         public int Quantity { get; set; }
+        public int? CategoryId { get; set; }
+        public string? UserId { get; set; }
 
     }
 
@@ -33,7 +35,9 @@ namespace ViewModels
                 Description = product.Description,
                 UnitWeight = product.UnitWeight,
                 Rate = rate,
-                Quantity = product.Quantity
+                Quantity = product.Quantity,
+                CategoryId = product.CategoryID,
+                UserId = product.UserId
             };
         }
     }

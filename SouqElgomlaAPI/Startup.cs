@@ -81,6 +81,7 @@ namespace SouqElgomlaAPI
             });
             #endregion
 
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "SouqElgomlaAPI", Version = "v1" });
@@ -104,6 +105,12 @@ namespace SouqElgomlaAPI
 
             app.UseRouting();
 
+            /*Allow cors cross-origin requests*/
+            app.UseCors(options =>
+                           options.AllowAnyOrigin()
+                                  .AllowAnyMethod()
+                                  .AllowAnyHeader());
+
             /**
              * After apply identity configuration add UseAuthentication and UseAuthorization
              * after UseRouting and before controolers mapping to check if the user is regestred or not
@@ -111,6 +118,7 @@ namespace SouqElgomlaAPI
 
             app.UseAuthentication();
             app.UseAuthorization();
+            
 
             app.UseEndpoints(endpoints =>
             {
