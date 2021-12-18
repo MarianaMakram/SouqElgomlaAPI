@@ -14,7 +14,7 @@ namespace Repositories
         Task<UserResultViewModel> SignUp(SignUpModel signUpModel);
         Task<UserResultViewModel> LogIn(LoginModel loginModel);
         Task<User> GetUser(string email);
-        Task<User> EditPatch(string email, JsonPatchDocument document);
+        Task<User> EditPatch(string email, User document);
         Task<User> PutImage(string email, string userImage);
     }
 }

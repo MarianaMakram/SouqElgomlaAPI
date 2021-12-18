@@ -177,10 +177,15 @@ namespace Repositories
             return user;
         }
 
-        public async Task<User> EditPatch(string email , JsonPatchDocument document)
+        public async Task<User> EditPatch(string email , User document)
         {
            User user = await UserManager.FindByEmailAsync(email);
-            document.ApplyTo(user);
+            user.Name = document.Name;
+            user.Email = document.Email;
+            user.UserName = document.UserName;
+            user.Address = document.Address;
+            await UserManager.UpdateAsync(user);
+           // document.ApplyTo(user);
             return user;
         }
 

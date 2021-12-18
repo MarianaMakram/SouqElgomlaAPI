@@ -90,9 +90,9 @@ namespace SouqElgomlaAPI.Controllers
             return Unauthorized();
         }
 
-        [HttpPatch]
+        [HttpPut("EditPatch")]
         [Authorize]
-        public async Task<IActionResult> EditPatch(JsonPatchDocument document)
+        public async Task<IActionResult> EditPatch(User document)
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
             if (identity != null)
@@ -107,7 +107,7 @@ namespace SouqElgomlaAPI.Controllers
             
         }
 
-        [HttpPost]
+        [HttpPost("AddUserImage")]
         [Authorize]
         public async Task<IActionResult> AddUserImage()
         {
@@ -117,7 +117,7 @@ namespace SouqElgomlaAPI.Controllers
                 var email = GetEmailFromClaim(identity);
                 var user = await userRepository.GetUser(email);
                 var httpRequest = HttpContext.Request;
-                var userImage = httpRequest.Form.Files["userImage"];
+                var userImage = httpRequest.Form.Files["image"];
                 string imageName = null;
 
                 if (userImage != null)
