@@ -184,5 +184,13 @@ namespace Repositories
             return user;
         }
 
+        public async Task<User> PutImage(string email, string userImage)
+        {
+            User user = await UserManager.FindByEmailAsync(email);
+            user.Image = userImage;
+            await UserManager.UpdateAsync(user);
+            return user;
+        }
+
     }
 }

@@ -15,5 +15,6 @@ namespace Repositories
         Task<UserResultViewModel> LogIn(LoginModel loginModel);
         Task<User> GetUser(string email);
         Task<User> EditPatch(string email, JsonPatchDocument document);
+        Task<User> PutImage(string email, string userImage);
     }
 }

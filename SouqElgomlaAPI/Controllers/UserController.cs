@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using Microsoft.AspNetCore.JsonPatch;
 using Models;
+using System.IO;
 
 namespace SouqElgomlaAPI.Controllers
 {
@@ -69,6 +70,20 @@ namespace SouqElgomlaAPI.Controllers
 
                 if (user != null)
                 {
+                    var url = HttpContext.Request;
+                    string schema;
+                    if (url.IsHttps)
+                    {
+                        schema = "https";
+                    }
+                    else
+                    {
+                        schema = "http";
+                    }
+                    if(user.Image != null)
+                    {
+                        user.Image = schema + "://" + url.Host.Host + ":" + url.Host.Port + "/Files/" + user.Image;
+                    }
                     return Ok(user);
                 }
             }
@@ -90,6 +105,32 @@ namespace SouqElgomlaAPI.Controllers
 
             return Unauthorized();
             
+        }
+
+        [HttpPost]
+        [Authorize]
+        public async Task<IActionResult> AddUserImage()
+        {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            if (identity != null)
+            {
+                var email = GetEmailFromClaim(identity);
+                var user = await userRepository.GetUser(email);
+                var httpRequest = HttpContext.Request;
+                var userImage = httpRequest.Form.Files["userImage"];
+                string imageName = null;
+
+                if (userImage != null)
+                {
+                    imageName = new String(Path.GetFileNameWithoutExtension(userImage.FileName).Take(10).ToArray()).Replace(" ", "-");
+                    imageName = imageName + DateTime.Now.ToString("yymmssfff") + Path.GetExtension(userImage.FileName);
+                }
+                var response = await userRepository.PutImage(email, imageName);
+
+                return Ok(response);
+            }
+
+            return Unauthorized();
         }
     }
 }
