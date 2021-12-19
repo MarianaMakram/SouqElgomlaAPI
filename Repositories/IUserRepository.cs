@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.JsonPatch;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.JsonPatch;
 using Models;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,6 @@ namespace Repositories
         Task<UserResultViewModel> LogIn(LoginModel loginModel);
         Task<User> GetUser(string email);
         Task<User> EditPatch(string email, User document);
-        Task<User> PutImage(string email, string userImage);
+        Task<User> PutImage(string email, string imageName, IFormFile userImage);
     }
 }

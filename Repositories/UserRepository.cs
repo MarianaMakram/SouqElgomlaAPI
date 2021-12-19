@@ -12,6 +12,9 @@ using System.Threading.Tasks;
 using ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.JsonPatch;
+using System.IO;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 
 namespace Repositories
 {
@@ -26,13 +29,16 @@ namespace Repositories
         /**used to access json file of appsettings yo inclue information of JwtSecurityToken in RunTime*/
         public IConfiguration Configuration { get; set; }
 
+        private readonly IWebHostEnvironment webHostEnvironment;
         public UserRepository(UserManager<User> userManager,
                               IConfiguration configuration, 
-                              RoleManager<IdentityRole> roleManager)
+                              RoleManager<IdentityRole> roleManager,
+                              IWebHostEnvironment hostEnvironment)
         {
             UserManager = userManager;
             Configuration = configuration;
             RoleManager = roleManager;
+            webHostEnvironment = hostEnvironment;
         }
 
         public async Task<UserResultViewModel> SignUp(SignUpModel signUpModel)
@@ -189,12 +195,33 @@ namespace Repositories
             return user;
         }
 
-        public async Task<User> PutImage(string email, string userImage)
+        public async Task<User> PutImage(string email, string imageName, IFormFile userImage)
         {
             User user = await UserManager.FindByEmailAsync(email);
-            user.Image = userImage;
+            user.Image = imageName;
+
+
+            UploadedFile(user, userImage);
+
             await UserManager.UpdateAsync(user);
             return user;
+        }
+
+        private string UploadedFile(User model, IFormFile userImage)
+        {
+            string uniqueFileName = null;
+
+            if (model.Image != null)
+            {
+                string uploadsFolder = Path.Combine("", "Files");
+                uniqueFileName = model.Image;
+                string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    userImage.CopyTo(fileStream);
+                }
+            }
+            return uniqueFileName;
         }
 
     }

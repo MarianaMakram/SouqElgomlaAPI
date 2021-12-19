@@ -11,6 +11,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.JsonPatch;
 using Models;
 using System.IO;
+using Microsoft.AspNetCore.Hosting;
 
 namespace SouqElgomlaAPI.Controllers
 {
@@ -22,10 +23,13 @@ namespace SouqElgomlaAPI.Controllers
         IUserRepository userRepository;
         ResultViewModel result = new ResultViewModel();
         UserResultViewModel UserResult = new UserResultViewModel();
+
+
         public UserController(IUnitOfWork _unitOfWork)
         {
             unitOfWork = _unitOfWork;
             userRepository = unitOfWork.GetUserRepository();
+
         }
 
         private string GetEmailFromClaim(ClaimsIdentity claimsIdentity)
@@ -124,13 +128,16 @@ namespace SouqElgomlaAPI.Controllers
                 {
                     imageName = new String(Path.GetFileNameWithoutExtension(userImage.FileName).Take(10).ToArray()).Replace(" ", "-");
                     imageName = imageName + DateTime.Now.ToString("yymmssfff") + Path.GetExtension(userImage.FileName);
+
                 }
-                var response = await userRepository.PutImage(email, imageName);
+
+               var response = await userRepository.PutImage(email, imageName , userImage);
 
                 return Ok(response);
             }
 
             return Unauthorized();
         }
+
     }
 }
