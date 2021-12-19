@@ -166,7 +166,7 @@ namespace SouqElgomlaAPI.Controllers
                         imageName = new String(Path.GetFileNameWithoutExtension(ProdImage.FileName).Take(10).ToArray()).Replace(" ", "-");
                         imageName = imageName + DateTime.Now.ToString("yymmssfff") + Path.GetExtension(ProdImage.FileName);
                     }
-                    product.Image = imageName;
+                    product.ImageUrl = imageName;
                     product.UserId = user.Id;
                     product.IsApproved = false;
                     await ProductRepo.Add(product);

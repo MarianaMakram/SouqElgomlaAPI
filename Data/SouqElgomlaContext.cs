@@ -22,6 +22,7 @@ namespace Data
         public DbSet<BuyProduct> BuyProducts ;
         public DbSet<MakeOrder> MakeOrders ;
         public DbSet<RetailerReviewProduct> RetailerReviewProducts ;
+        public DbSet<Admin> Admins;
         //public DbSet<SupplierRetailerReview> SupplierRetailerReviews ;
 
 
@@ -38,6 +39,7 @@ namespace Data
             modelBuilder.ApplyConfiguration(new ShipperEntityConfiguration());
             //modelBuilder.ApplyConfiguration(new SupplierRetailerReviewEntityConfiguration());
             modelBuilder.ApplyConfiguration(new UserEntityConfiguration());
+            modelBuilder.ApplyConfiguration(new AdminEntityConfiguration());
             base.OnModelCreating(modelBuilder);
         }
         }

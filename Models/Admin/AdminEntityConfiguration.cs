@@ -12,12 +12,13 @@ namespace Models
     {
         public void Configure(EntityTypeBuilder<Admin> builder)
         {
-            builder.ToTable("Admin");
-            builder.HasKey(i => i.ID);
-            builder.Property(i => i.ID).ValueGeneratedOnAdd();
-            builder.Property(i => i.Name).IsRequired().HasMaxLength(50);
-            builder.Property(i => i.UserName).IsRequired().HasMaxLength(50);
-            builder.Property(i => i.Password).IsRequired().HasMaxLength(50);
+            builder.ToTable("adminLogin");
+            builder.HasKey(i => i.id);
+            builder.Property(i => i.id).HasColumnType("varchar").ValueGeneratedOnAdd();
+            builder.Property(i => i.name).IsRequired().HasColumnType("varchar").HasMaxLength(30);
+            builder.Property(i => i.Address).HasColumnType("varchar").HasMaxLength(30);
+            builder.Property(i => i.password).IsRequired().HasColumnType("varchar").HasMaxLength(50);
+            builder.Property(i => i.email).IsRequired().HasColumnType("varchar").HasMaxLength(30);
         }
     }
 }

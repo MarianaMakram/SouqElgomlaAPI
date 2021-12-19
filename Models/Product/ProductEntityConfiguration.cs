@@ -16,7 +16,7 @@ namespace Models
             builder.HasKey(i => i.ID);
             builder.Property(i => i.ID).ValueGeneratedOnAdd();
             builder.Property(i => i.Name).IsRequired(true).HasMaxLength(50);
-            builder.Property(i => i.Image).IsRequired(true).HasMaxLength(200);
+            builder.Property(i => i.ImageUrl).HasMaxLength(200);
             builder.Property(i => i.Price).IsRequired(true);
             builder.Property(i => i.ProductionDate).HasColumnType("date");
             builder.Property(i => i.ExpireDate).HasColumnType("date");

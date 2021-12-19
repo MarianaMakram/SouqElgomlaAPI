@@ -15,7 +15,8 @@ namespace Models
         public int Quantity { get; set; }
         public DateTime? ExpireDate { get; set; }
         public string? UnitWeight { get; set; }
-        public string Image { get; set; }
+        public string? ImageUrl { get; set; }
+        public byte[]? Image { get; set; }
         public DateTime? ProductionDate{ get; set; }
 
         [ForeignKey("User")]

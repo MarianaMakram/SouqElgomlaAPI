@@ -14,7 +14,8 @@ namespace ViewModels
         public string? Description { get; set; }
         public double Price { get; set; }
         public string? UnitWeight { get; set; }
-        public string Image { get; set; }
+        public string ImageUrl { get; set; }
+        public byte[] Image { get; set; }
         public int? Rate { get; set; }
         public int Quantity { get; set; }
         public int? CategoryId { get; set; }
@@ -30,6 +31,7 @@ namespace ViewModels
             {
                 ID = product.ID,
                 Name = product.Name,
+                ImageUrl = product.ImageUrl,
                 Image = product.Image,
                 Price = product.Price,
                 Description = product.Description,

@@ -16,8 +16,8 @@ namespace Models
             builder.HasKey(i => i.ID);
             builder.Property(i => i.ID).ValueGeneratedOnAdd();
             builder.Property(i => i.Name).IsRequired().HasMaxLength(50);
-            builder.Property(i => i.Description).IsRequired().HasMaxLength(500);
-            builder.Property(i => i.ImgUrl).IsRequired().HasMaxLength(200);
+            builder.Property(i => i.Description).HasMaxLength(500);
+            builder.Property(i => i.ImgUrl).HasMaxLength(200);
             
         }
     }

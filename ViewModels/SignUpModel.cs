@@ -13,7 +13,6 @@ namespace ViewModels
         [Required(ErrorMessage = "Name is required")]
         public string Name { get; set; }
         public string? Address { get; set; }
-        public string? Image { get; set; }
         public string? PayPalAccount { get; set; }
 
         [Required(ErrorMessage = "Email is required")]
@@ -40,7 +39,6 @@ namespace ViewModels
                 Address = signUpModel.Address,
                 Email = signUpModel.Email,
                 UserName = signUpModel.UserName,
-                Image = signUpModel.Image,
                 PayPalAccount = signUpModel.PayPalAccount
             };
 
