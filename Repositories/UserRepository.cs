@@ -198,7 +198,7 @@ namespace Repositories
         public async Task<User> PutImage(string email, string imageName, IFormFile userImage)
         {
             User user = await UserManager.FindByEmailAsync(email);
-            user.ImageUrl = imageName;
+            user.Image = imageName;
 
 
             UploadedFile(user, userImage);
@@ -214,7 +214,7 @@ namespace Repositories
             if (model.Image != null)
             {
                 string uploadsFolder = Path.Combine("", "Files");
-                uniqueFileName = model.ImageUrl;
+                uniqueFileName = model.Image;
                 string filePath = Path.Combine(uploadsFolder, uniqueFileName);
                 using (var fileStream = new FileStream(filePath, FileMode.Create))
                 {

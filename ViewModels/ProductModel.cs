@@ -12,12 +12,12 @@ namespace ViewModels
         public int ID { get; set; }
         public string Name { get; set; }
         public string? Description { get; set; }
-        public double Price { get; set; }
+        public double? Price { get; set; }
         public string? UnitWeight { get; set; }
         public string ImageUrl { get; set; }
         public byte[] Image { get; set; }
         public int? Rate { get; set; }
-        public int Quantity { get; set; }
+        public int? Quantity { get; set; }
         public int? CategoryId { get; set; }
         public string? UserId { get; set; }
 

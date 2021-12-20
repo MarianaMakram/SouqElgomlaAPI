@@ -86,7 +86,7 @@ namespace SouqElgomlaAPI.Controllers
                     }
                     if(user.Image != null)
                     {
-                        user.ImageUrl = schema + "://" + url.Host.Host + ":" + url.Host.Port + "/Files/" + user.ImageUrl;
+                        user.Image = schema + "://" + url.Host.Host + ":" + url.Host.Port + "/Files/" + user.Image;
                     }
                     return Ok(user);
                 }
