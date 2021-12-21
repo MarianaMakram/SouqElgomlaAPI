@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Models
 {
-    public class RetailerReviewProductCategoryEntityConfiguration : IEntityTypeConfiguration<RetailerReviewProduct>
+    public class RetailerReviewProductEntityConfiguration : IEntityTypeConfiguration<RetailerReviewProduct>
     {
         public void Configure(EntityTypeBuilder<RetailerReviewProduct> builder)
         {

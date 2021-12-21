@@ -27,8 +27,6 @@ namespace Models
         public bool? IsApproved { get; set; }
 
         public virtual User User { get; set; }
-        public virtual ICollection<BuyProduct> BuyProducts { get; set; }
-
         public virtual Category Category { get; set; }
         public virtual ICollection<RetailerReviewProduct> RetailerReviewProducts { get; set; }
 

@@ -9,17 +9,27 @@ namespace Models
 {
     public class Order : BaseModel
     {
-        public bool? IsComplete { get; set; }
 
-        [ForeignKey("Shipper")]
-        public int? ShipperID { get; set; }
+        [ForeignKey("User")]
+        public string UserId { get; set; }
+        public virtual User User { get; set; }
 
-        [ForeignKey("Payment")]
-        public int? PaymentID { get; set; }
+        public DateTime OrderDate { get; set; }
+        public virtual ICollection<ProductOrder> ProductOrders { get; set; }
 
-        public virtual ICollection<MakeOrder> MakeOrders { get; set; }
+        #region old entity
+        //public bool? IsComplete { get; set; }
 
-        public virtual Shipper Shipper { get; set; }
-        public virtual Payment Payment { get; set; }
+        //[ForeignKey("Shipper")]
+        //public int? ShipperID { get; set; }
+
+        //[ForeignKey("Payment")]
+        //public int? PaymentID { get; set; }
+
+        //public virtual ICollection<MakeOrder> MakeOrders { get; set; }
+
+        //public virtual Shipper Shipper { get; set; }
+        //public virtual Payment Payment { get; set; }
+        #endregion
     }
 }

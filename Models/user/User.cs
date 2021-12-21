@@ -19,8 +19,10 @@ namespace Models
 
         public virtual ICollection<Product> Products { get; set; }
         public virtual ICollection<RetailerReviewProduct> RetailerReviewProducts { get; set; }
-        public virtual ICollection<BuyProduct> BuyProducts { get; set; }
-        public virtual ICollection<MakeOrder> MakeOrders { get; set; }
+        public virtual ICollection<Order> Orders { get; set; }
+
+        //public virtual ICollection<BuyProduct> BuyProducts { get; set; }
+        //public virtual ICollection<MakeOrder> MakeOrders { get; set; }
 
     }
 }

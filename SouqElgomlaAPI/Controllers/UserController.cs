@@ -45,9 +45,9 @@ namespace SouqElgomlaAPI.Controllers
         {
             UserResult = await userRepository.SignUp(signUpModel);
             if (result.Status)
-                return Ok(result);
+                return Ok(UserResult);
 
-            return Unauthorized(result);
+            return Unauthorized(UserResult);
         }
 
         [HttpPost("login")]
