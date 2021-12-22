@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Models;
+using Newtonsoft.Json;
 using Repositories;
 using System;
 using System.Collections.Generic;
@@ -86,6 +87,51 @@ namespace SouqElgomlaAPI.Controllers
             return Unauthorized();
         }
 
+        #endregion
+
+        #region Get order
+
+        [HttpGet]
+        [Authorize]
+
+        public async Task<IActionResult> Get()
+        {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+            if(identity != null)
+            {
+                IEnumerable<Claim> claims = identity.Claims;
+                var email = claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Email);
+                var user = await userRepository.GetUser(email.Value);
+
+                if(user != null)
+                {
+                    IList<OrderResultViewModel> orderResults = new List<OrderResultViewModel>();
+
+                    IEnumerable<Order> orders = await OrderRepo.GetAsync();
+                    orders = orders.Where(order => order.UserId == user.Id).ToList();
+
+                    #region product order reference loop
+
+                    //IEnumerable<ProductOrder> productorders = await ProductOrderRepo.GetAsync();
+                    //productorders = productorders.ToList();
+
+                    //foreach (var iterator in orders)
+                    //{
+                    //    var productorder = productorders.Where(item => item.Order == iterator);
+
+                    //    orderResults.Add(new OrderResultViewModel
+                    //    {
+                    //        order = iterator,
+                    //        productOrders = productorder.ToList()
+                    //    });
+                    //}
+                    #endregion
+
+                    return Ok(orders);
+                }
+            }
+            return Unauthorized();
+        }
         #endregion
     }
 }

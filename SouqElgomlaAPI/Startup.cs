@@ -18,6 +18,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Models;
 using Microsoft.AspNetCore.Identity;
+using Newtonsoft.Json;
 
 namespace SouqElgomlaAPI
 {
@@ -34,7 +35,9 @@ namespace SouqElgomlaAPI
         public void ConfigureServices(IServiceCollection services)
         {
 
-            services.AddControllers().AddNewtonsoftJson();
+            services.AddControllers().AddNewtonsoftJson(x =>
+            x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
+
             services.AddDbContext<SouqElgomlaContext>(options =>
             {
                 options.UseSqlServer(Configuration.GetConnectionString("SouqElGomla"));
