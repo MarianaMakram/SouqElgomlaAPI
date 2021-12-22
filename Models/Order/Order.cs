@@ -7,6 +7,12 @@ using System.Threading.Tasks;
 
 namespace Models
 {
+    public enum OrderDeliveredState
+    {
+        Pending,
+        OnTheWay,
+        Delivered
+    }
     public class Order : BaseModel
     {
 
@@ -15,6 +21,8 @@ namespace Models
         public virtual User User { get; set; }
 
         public DateTime OrderDate { get; set; }
+
+        public OrderDeliveredState State { set; get; }
         public virtual ICollection<ProductOrder> ProductOrders { get; set; }
 
         #region old entity

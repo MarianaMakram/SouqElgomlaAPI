@@ -75,18 +75,10 @@ namespace SouqElgomlaAPI.Controllers
                 if (user != null)
                 {
                     var url = HttpContext.Request;
-                    string schema;
-                    if (url.IsHttps)
-                    {
-                        schema = "https";
-                    }
-                    else
-                    {
-                        schema = "http";
-                    }
+                    
                     if(user.Image != null)
                     {
-                        user.Image = schema + "://" + url.Host.Host + ":" + url.Host.Port + "/Files/" + user.Image;
+                        user.Image = url.Scheme + "://" + url.Host.Host + ":" + url.Host.Port + "/Files/" + user.Image;
                     }
                     return Ok(user);
                 }
