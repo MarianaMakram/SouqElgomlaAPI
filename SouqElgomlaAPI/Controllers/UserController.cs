@@ -96,6 +96,12 @@ namespace SouqElgomlaAPI.Controllers
                 var email = GetEmailFromClaim(identity);
                 User user = await userRepository.EditPatch(email, document);
                 await unitOfWork.Save();
+
+                if(user.Image != null)
+                {
+                    var url = HttpContext.Request;
+                    user.Image = url.Scheme + "://" + url.Host.Host + ":" + url.Host.Port + "/Files/" + user.Image;
+                }
                 return Ok(user);
             }
 
@@ -124,6 +130,10 @@ namespace SouqElgomlaAPI.Controllers
                 }
 
                var response = await userRepository.PutImage(email, imageName , userImage);
+                await unitOfWork.Save();
+
+                var url = HttpContext.Request;
+                response.Image = url.Scheme + "://" + url.Host.Host + ":" + url.Host.Port + "/Files/" + response.Image;
 
                 return Ok(response);
             }

@@ -236,10 +236,13 @@ namespace SouqElgomlaAPI.Controllers
 
         #region Edit product Quantity
         /*
+         * will not used because this action will done in order controller
          * edit product quantity by decrement it according to number of selled items
          */
 
         [HttpPut("{id:int}")]
+        [Authorize(Roles = "Supplier")]
+
         public async Task<IActionResult> Put(int id, int quantity)
         {
             var product = await ProductRepo.GetByIDAsync(id);

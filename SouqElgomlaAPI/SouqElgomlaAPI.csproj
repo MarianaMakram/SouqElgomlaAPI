@@ -36,7 +36,6 @@
 
   <ItemGroup>
     <None Include="wwwroot\Files\0215435657.jpg" />
-    <None Include="wwwroot\Files\1214746147.jpg" />
   </ItemGroup>
 
 </Project>
