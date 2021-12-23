@@ -31,7 +31,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Files\" />
+    <Folder Include="wwwroot\Files\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\Files\0215435657.jpg" />
+    <None Include="wwwroot\Files\1214746147.jpg" />
   </ItemGroup>
 
 </Project>

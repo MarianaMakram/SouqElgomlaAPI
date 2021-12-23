@@ -77,13 +77,13 @@ namespace Repositories
 
             #region AddRole
 
-            bool IsRoleExists = await RoleManager.RoleExistsAsync(signUpModel.Role);
-            if (!IsRoleExists)
-            {
-                var RoleResult = await RoleManager.CreateAsync(new IdentityRole(signUpModel.Role));
-            }
+            //bool IsRoleExists = await RoleManager.RoleExistsAsync(signUpModel.Role);
+            //if (!IsRoleExists)
+            //{
+            //    var RoleResult = await RoleManager.CreateAsync(new IdentityRole(signUpModel.Role));
+            //}
 
-            var UserRoleResult = await UserManager.AddToRoleAsync(Temp, signUpModel.Role);
+            //var UserRoleResult = await UserManager.AddToRoleAsync(Temp, signUpModel.Role);
 
 
             #endregion
