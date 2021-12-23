@@ -4,14 +4,16 @@ using Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Data.Migrations
 {
     [DbContext(typeof(SouqElgomlaContext))]
-    partial class SouqElgomlaContextModelSnapshot : ModelSnapshot
+    [Migration("20211223192537_productBrandPackagesNumber")]
+    partial class productBrandPackagesNumber
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -240,6 +242,9 @@ namespace Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Brand")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("CategoryID")
                         .HasColumnType("int");
