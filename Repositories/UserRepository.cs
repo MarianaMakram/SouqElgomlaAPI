@@ -204,7 +204,6 @@ namespace Repositories
             UploadedFile(user, userImage);
 
             await UserManager.UpdateAsync(user);
-             
             return user;
         }
 
@@ -214,7 +213,7 @@ namespace Repositories
 
             if (model.Image != null)
             {
-                string uploadsFolder = Path.Combine("wwwroot", "Files");
+                string uploadsFolder = Path.Combine("", "Files");
                 uniqueFileName = model.Image;
                 string filePath = Path.Combine(uploadsFolder, uniqueFileName);
                 using (var fileStream = new FileStream(filePath, FileMode.Create))
