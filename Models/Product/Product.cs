@@ -18,6 +18,7 @@ namespace Models
         public string? ImageUrl { get; set; }
         public byte[]? Image { get; set; }
         public DateTime? ProductionDate{ get; set; }
+        public int? PackgesNumber { get; set; }
 
         [ForeignKey("User")]
         public string? UserId { get; set; }

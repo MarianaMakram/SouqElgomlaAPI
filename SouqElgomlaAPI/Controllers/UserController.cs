@@ -54,10 +54,10 @@ namespace SouqElgomlaAPI.Controllers
         public async Task<IActionResult> Login(LoginModel model)
         {
             UserResult = await userRepository.LogIn(model);
-            //if (result.Status)
+            if (result.Status)
                 return Ok(UserResult);
 
-           // return Unauthorized();
+            return Unauthorized();
         }
 
         [HttpGet("GetUser")]

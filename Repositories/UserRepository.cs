@@ -134,13 +134,13 @@ namespace Repositories
             /**Information about user be included in his token*/
 
             // Get User roles and add them to claims
-            var roles = await UserManager.GetRolesAsync(user);
+            //var roles = await UserManager.GetRolesAsync(user);
 
             var userClaims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name,user.Name),
                 new Claim(ClaimTypes.Email,user.Email),
-                new Claim(ClaimTypes.Role,roles[0]),
+                //new Claim(ClaimTypes.Role,roles[0]),
                 new Claim(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString())
             };
 

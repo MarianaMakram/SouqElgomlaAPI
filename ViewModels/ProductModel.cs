@@ -20,6 +20,8 @@ namespace ViewModels
         public int? Quantity { get; set; }
         public int? CategoryId { get; set; }
         public string? UserId { get; set; }
+        public int? PackgesNumber { get; set; }
+
 
     }
 
@@ -39,7 +41,8 @@ namespace ViewModels
                 Rate = rate,
                 Quantity = product.Quantity,
                 CategoryId = product.CategoryID,
-                UserId = product.UserId
+                UserId = product.UserId,
+                PackgesNumber = product.PackgesNumber
             };
         }
     }
