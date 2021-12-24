@@ -54,7 +54,7 @@ namespace SouqElgomlaAPI.Controllers
         public async Task<IActionResult> Login(LoginModel model)
         {
             UserResult = await userRepository.LogIn(model);
-            if (result.Status)
+            if (UserResult.Status)
                 return Ok(UserResult);
 
             return Unauthorized();
