@@ -87,11 +87,12 @@ namespace Repositories
 
 
             #endregion
+            
 
             return new UserResultViewModel
             {
                 Status = true,
-                Message = "User creation successed"
+                Message = "User creation successed",
             };
 
         }

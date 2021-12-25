@@ -44,8 +44,19 @@ namespace SouqElgomlaAPI.Controllers
         public async Task<IActionResult> SignUp(SignUpModel signUpModel)
         {
             UserResult = await userRepository.SignUp(signUpModel);
-            if (result.Status)
+            if (UserResult.Status)
+            {
+                var response = await userRepository.LogIn(new LoginModel
+                {
+                    Email = signUpModel.Email,
+                    Password = signUpModel.Password
+                });
+
+                UserResult.Token = response.Token;
+
                 return Ok(UserResult);
+            }
+                
 
             return Unauthorized(UserResult);
         }
@@ -54,7 +65,7 @@ namespace SouqElgomlaAPI.Controllers
         public async Task<IActionResult> Login(LoginModel model)
         {
             UserResult = await userRepository.LogIn(model);
-            if (result.Status)
+            if (UserResult.Status)
                 return Ok(UserResult);
 
             return Unauthorized();

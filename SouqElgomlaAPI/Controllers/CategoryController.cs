@@ -39,6 +39,13 @@ namespace SouqElgomlaAPI.Controllers
             }
             else
             {
+                var allProducts = await productRepo.GetAsync();
+                foreach(var iterator in list.ToList())
+                {
+                    iterator.Products = allProducts.ToList().FindAll(item => item.CategoryID == iterator.ID);
+                }
+
+                list = list.Where(itemList => itemList.Products != null);
                 result.Status = true;
                 result.Data = list;
             }
