@@ -9,7 +9,14 @@ namespace ViewModels
 {
     public class OrderResultViewModel
     {
-        public Order order { get; set; }
-        public IList<ProductOrder> productOrders { get; set; }
+        public int orderId { get; set; }
+        public string userId { get; set; }
+        public DateTime orderDate { get; set; }
+        public int state { get; set; }
+        public int paymentType { get; set; }
+        public string name { get; set; }
+        public string address { get; set; }
+        public string phone { get; set; }
+        public IList<ProductOrderViewModel> productOrderViewModels { get; set; }
     }
 }
