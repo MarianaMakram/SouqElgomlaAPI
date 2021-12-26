@@ -34,9 +34,9 @@ namespace SouqElgomlaAPI.Controllers
 
         #region post order
 
-        [HttpPost]
+        [HttpPost("CheckOut")]
         [Authorize]
-        public async Task<IActionResult> Post(IEnumerable<OrderviewModel> models)
+        public async Task<IActionResult> Post(PostOrderModel orderModel)
         {
             var identity = HttpContext.User.Identity as ClaimsIdentity;
 
@@ -45,24 +45,36 @@ namespace SouqElgomlaAPI.Controllers
                 IEnumerable<Claim> claims = identity.Claims;
                 var email = claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Email);
                 var user = await userRepository.GetUser(email.Value);
-
+                
                 if(user != null)
                 {
                     Order order = new Order
                     {
                         UserId = user.Id,
                         OrderDate = DateTime.Now,
-                        State = OrderDeliveredState.Pending 
+                        State = OrderDeliveredState.Pending,
+                        Name = orderModel.name,
+                        Address = orderModel.address,
+                        Phone = orderModel.phone
                     };
+
+                    if(orderModel.payment == 1)
+                    {
+                        order.PaymentType = PaymentType.Cash;
+                    }
+                    else if(orderModel.payment == 2)
+                    {
+                        order.PaymentType = PaymentType.PayPal;
+                    }
 
                     var recordOrder = await OrderRepo.Add(order);
                     await unitOfWork.Save();
 
-                    foreach(var item in models)
+                    foreach (var item in orderModel.orderviewModels)
                     {
                         Product product = await ProductRepo.GetByIDAsync(item.productID);
 
-                        if(product != null)
+                        if (product != null)
                         {
                             product.Quantity -= item.quantity;
 
@@ -78,9 +90,9 @@ namespace SouqElgomlaAPI.Controllers
 
                             await ProductOrderRepo.Add(productOrder);
                             await unitOfWork.Save();
-                        } 
+                        }
                     }
-                    return Ok();
+                    return Ok(recordOrder.ID);
                 }
             }
 
@@ -91,7 +103,7 @@ namespace SouqElgomlaAPI.Controllers
 
         #region Get order
 
-        [HttpGet]
+        [HttpGet("GetOrder")]
         [Authorize]
 
         public async Task<IActionResult> Get()
@@ -112,22 +124,40 @@ namespace SouqElgomlaAPI.Controllers
 
                     #region product order reference loop
 
-                    //IEnumerable<ProductOrder> productorders = await ProductOrderRepo.GetAsync();
-                    //productorders = productorders.ToList();
+                    IEnumerable<ProductOrder> productorders = await ProductOrderRepo.GetAsync();
+                    productorders = productorders.ToList();
 
-                    //foreach (var iterator in orders)
-                    //{
-                    //    var productorder = productorders.Where(item => item.Order == iterator);
+                    foreach (var iterator in orders)
+                    {
+                        var productorder = productorders.Where(item => item.Order == iterator);
 
-                    //    orderResults.Add(new OrderResultViewModel
-                    //    {
-                    //        order = iterator,
-                    //        productOrders = productorder.ToList()
-                    //    });
-                    //}
+                        OrderResultViewModel orderResult = new OrderResultViewModel {
+                            orderId = iterator.ID,
+                            userId = iterator.UserId,
+                            orderDate = iterator.OrderDate,
+                            state = ((int)iterator.State),
+                            paymentType = ((int)iterator.PaymentType),
+                            name = iterator.Name,
+                            address = iterator.Address,
+                            phone = iterator.Phone
+                        };
+
+                        IList<ProductOrderViewModel> productOrderView = new List<ProductOrderViewModel>();
+                        foreach (var prodOrder in productorder)
+                        {
+                            ProductOrderViewModel productView = new ProductOrderViewModel();
+                            productView.productOrderId = prodOrder.ID;
+                            productView.productID = prodOrder.ProductID;
+                            productView.quantity = prodOrder.Quantity;
+
+                            productOrderView.Add(productView);
+                        }
+
+                        orderResult.productOrderViewModels = productOrderView;
+                        orderResults.Add(orderResult);
+                    }
                     #endregion
-
-                    return Ok(orders);
+                    return Ok(orderResults);
                 }
             }
             return Unauthorized();

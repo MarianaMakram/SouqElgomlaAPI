@@ -7,11 +7,20 @@ using System.Threading.Tasks;
 
 namespace Models
 {
+    [Flags]
     public enum OrderDeliveredState
     {
         Pending,
         OnTheWay,
-        Delivered
+        Delivered,
+        Canceled
+    }
+
+    [Flags]
+    public enum PaymentType
+    {
+        Cash = 1,
+        PayPal
     }
     public class Order : BaseModel
     {
@@ -23,6 +32,10 @@ namespace Models
         public DateTime OrderDate { get; set; }
 
         public OrderDeliveredState State { set; get; }
+        public PaymentType PaymentType { get; set; }
+        public string Name { get; set; }
+        public string Address { get; set; }
+        public string Phone { get; set; }
         public virtual ICollection<ProductOrder> ProductOrders { get; set; }
 
         #region old entity
