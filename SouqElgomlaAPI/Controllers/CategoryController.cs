@@ -45,7 +45,7 @@ namespace SouqElgomlaAPI.Controllers
                     iterator.Products = allProducts.ToList().FindAll(item => item.CategoryID == iterator.ID);
                 }
 
-                list = list.Where(itemList => itemList.Products != null);
+                list = list.Where(itemList => itemList.Products.Count != 0);
                 result.Status = true;
                 result.Data = list;
             }

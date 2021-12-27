@@ -105,10 +105,20 @@ namespace SouqElgomlaAPI.Controllers
                 {
                     var ProductRateList = (await ProductReviewRepo.GetAsync()).ToList()
                                         .FindAll(i => i.ProductID == id);
-                    var ProductRate = ProductRateList.Sum(i => i.Rate)/ ProductRateList.Count;
+                    var rates = ProductRateList.Sum(i => i.Rate);
+                    var countrate = ProductRateList.Count;
+                    if (countrate>0)
+                    {
+                        var ProductRate = rates / countrate;
+                        result.Data = Temp.ToProductModel(ProductRate);
+                    }
+                    else
+                    {
+                        result.Data = Temp.ToProductModel(0);
+
+                    }
 
                     //Temp.Image = schema + "://" + url.Host.Host + ":" + url.Host.Port + "/Files/" +Temp.Image;
-                    result.Data = Temp.ToProductModel(ProductRate);
                 }
             }
 
